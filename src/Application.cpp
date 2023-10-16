@@ -67,7 +67,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		MSG message = {};
 
 		// Handle incoming messages.
-		while (PeekMessage(&message, window_handle, 0, 0, PM_REMOVE))
+		if (PeekMessage(&message, window_handle, 0, 0, PM_REMOVE))
 		{
 			DispatchMessage(&message);
 		}
@@ -82,6 +82,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		InvalidateRect(window_handle, NULL, FALSE);
 		UpdateWindow(window_handle);
+
+		// 60 FPS.
+		Sleep(16);
 	}
 
 	return 0;
@@ -108,6 +111,8 @@ LRESULT CALLBACK WindowProc(HWND window_handle, UINT message, WPARAM wParam, LPA
 
 			int width = rect.right - rect.left;
 			int height = rect.bottom - rect.top;
+
+			//DrawText(DeviceContextHandle, L"DEVELOPMENT BUILD", -1, &rect, DT_LEFT);
 
 			BitBlt(device_context_handle,   // Destination.
 				rect.left, rect.top,        // Upper-left corner.
