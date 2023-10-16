@@ -72,6 +72,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			DispatchMessage(&message);
 		}
 
+		Game::Update();
+		Game::Render();
 
 		for (int i = 0; i < Frame.Width * Frame.Height; i++)
 		{
