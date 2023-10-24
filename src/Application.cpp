@@ -21,12 +21,6 @@ struct
 
 LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM);
 
-#if RAND_MAX == 32767
-#define Rand32() ((rand() << 16) + (rand() << 1) + (rand() & 1))
-#else
-#define Rand32() rand()
-#endif
-
 static BITMAPINFO BitmapInfo;
 static HBITMAP Bitmap;
 static HDC DeviceContextHandle;
@@ -54,7 +48,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	// Create the window.
 	HWND window_handle = CreateWindow(window_class_name, WindowTitle, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-		640, 300, 640, 480, NULL, NULL, hInstance, NULL);
+		640, 360, 640, 360, NULL, NULL, hInstance, NULL);
 
 	// Failed to create the window.
 	if (window_handle == NULL)
@@ -74,11 +68,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		Game::Update();
 		Game::Render();
-
-		for (int i = 0; i < Frame.Width * Frame.Height; i++)
-		{
-			Frame.Pixels[i % (Frame.Width * Frame.Height)] = Rand32();
-		}
 
 		InvalidateRect(window_handle, NULL, FALSE);
 		UpdateWindow(window_handle);
@@ -108,18 +97,10 @@ LRESULT CALLBACK WindowProc(HWND window_handle, UINT message, WPARAM wParam, LPA
 			HDC device_context_handle = BeginPaint(window_handle, &paint);
 
 			RECT rect = paint.rcPaint;
-
 			int width = rect.right - rect.left;
 			int height = rect.bottom - rect.top;
 
-			//DrawText(DeviceContextHandle, L"DEVELOPMENT BUILD", -1, &rect, DT_LEFT);
 
-			BitBlt(device_context_handle,   // Destination.
-				rect.left, rect.top,        // Upper-left corner.
-				width, height,              // Rect size.
-				DeviceContextHandle,        // Source.
-				rect.left, rect.top,        // Upper-left corner.
-				SRCCOPY);                   // Raster-operation.
 
 			EndPaint(window_handle, &paint);
 
