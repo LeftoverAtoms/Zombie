@@ -100,7 +100,27 @@ LRESULT CALLBACK WindowProc(HWND window_handle, UINT message, WPARAM wParam, LPA
 			int width = rect.right - rect.left;
 			int height = rect.bottom - rect.top;
 
+			// Background.
+			FillRect(device_context_handle, &rect, CreateSolidBrush(RGB(64, 64, 64)));
 
+			COLORREF color = RGB(255, 0, 0);
+			HBRUSH brush = CreateSolidBrush(color);
+
+			int quality = width / 64;
+
+			for (int x = 0; x < Frame.Width; x += quality)
+			{
+				int rnd = x * 0.1 + rand() % 5;
+
+				RECT rec;
+				rec.left = x;
+				rec.right = x + quality;
+				rec.top = height * 0.5 + rnd;
+				rec.bottom = height * 0.5 - rnd;
+
+				// Vertical pillars.
+				FillRect(device_context_handle, &rec, brush);
+			}
 
 			EndPaint(window_handle, &paint);
 
