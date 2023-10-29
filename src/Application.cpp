@@ -56,6 +56,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		return -1;
 	}
 
+	AllocConsole();
+	freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);
+	std::cout << "Console Enabled \n";
+
 	// Gameloop.
 	while (!quit) {
 		MSG message = {};
