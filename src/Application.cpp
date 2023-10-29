@@ -19,11 +19,17 @@ struct
 	uint32_t* Pixels;
 } Frame;
 
+void DrawRect(int x, int y, int width, int height, int hexColor)
 {
 	// Convert coordinate space to pixel space.
+	x += (Frame.Width * 0.5) - (width * 0.5);
+	y += (Frame.Height * 0.5) - (height * 0.5);
 
+	for (int yi = y; yi < y + height; yi++)
 	{
+		for (int xi = x; xi < x + width; xi++)
 		{
+			Frame.Pixels[(Frame.Width * yi) + xi] = hexColor;
 		}
 	}
 }
@@ -113,20 +119,20 @@ LRESULT CALLBACK WindowProc(HWND window_handle, UINT message, WPARAM wParam, LPA
 			int width = rect.right - rect.left;
 			int height = rect.bottom - rect.top;
 
-			int halfWidth = Frame.Width / 2;
-
-			int segments = 512;
-			int insanity = 8;
+			float segments = Frame.Width;
+			int insanity = 10;
 			int quality = Frame.Width / segments;
 
-			// HACK.
-			DrawRect(0, 0, Frame.Width, Frame.Height, 0x000000);
-			for (int x = 0; x < segments; x++)
-			{
-				int rnd = rand() % insanity;
+			float halfSegments = segments / 2;
 
-				// ( Position ) - ( ( Half Segments ) * Width ) + ( Width / 2 ) 
-				DrawRect(((x * quality) - ((segments / 2) * quality) + (quality / 2)), 0, quality, Frame.Height / 2 + rnd, 0xFFFF00);
+			// Clear pixels.
+			DrawRect(0, 0, Frame.Width, Frame.Height, 0x000000);
+
+			for (int x = -halfSegments; x <= halfSegments; x++)
+			{
+				int rnd = (rand() % insanity);
+
+				DrawRect(x * quality, 0, quality, Frame.Height / 2 + rnd, 0xFFFF00);
 			}
 
 			BitBlt(device_context_handle,   // Destination.
