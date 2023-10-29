@@ -5,11 +5,11 @@
 #endif 
 
 #include "Game.h"
-#include <stdint.h>
+#include "Log.cpp"
 #include <windows.h>
-#include <iostream>
 
-const wchar_t WindowTitle[] = L"Zombie Game";
+const wchar_t WindowName[] = L"Zombie Game";
+const wchar_t WindowClassName[] = L"ZMB_GAME";
 
 static bool quit = false;
 
@@ -44,18 +44,21 @@ static HDC DeviceContextHandle;
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ PSTR lpCmdLine, _In_ int nCmdShow)
 {
 #ifdef _DEBUG
-	// Create the console window.
+	// Create a console window.
 	AllocConsole();
+
+	// Redirect output stream.
 	freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);
-	std::cout << "Initialized Console" << '\n';
+	freopen_s((FILE**)stderr, "CONOUT$", "w", stderr);
+
+	Log::Info("Console Initialized");
 #endif
 
-	const wchar_t window_class_name[] = L"ZMB_GAME";
 	const WNDCLASS window_class =
 	{
 		.lpfnWndProc = WindowProc,
 		.hInstance = hInstance,
-		.lpszClassName = window_class_name
+		.lpszClassName = WindowClassName
 	};
 	RegisterClass(&window_class);
 
@@ -70,12 +73,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	DeviceContextHandle = CreateCompatibleDC(NULL);
 
 	// Create the game window.
-	HWND window_handle = CreateWindow(window_class_name, WindowTitle, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-		640, 360, 640, 360, NULL, NULL, hInstance, NULL);
+	HWND window_handle = CreateWindow(
+		WindowClassName, WindowName,
+		WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+		640, 360, 640, 360,
+		NULL, NULL, hInstance, NULL);
 
-	// Failed to create the window.
 	if (window_handle == NULL)
 	{
+		Log::Error("Failed to create game window");
 		return -1;
 	}
 
