@@ -12,12 +12,6 @@ const wchar_t WindowTitle[] = L"Zombie Game";
 
 static bool quit = false;
 
-struct Vector2
-{
-	int x;
-	int y;
-};
-
 struct
 {
 	int Width;
@@ -25,20 +19,11 @@ struct
 	uint32_t* Pixels;
 } Frame;
 
-void DrawRect(Vector2 pos, int width, int height, int hexColor)
 {
 	// Convert coordinate space to pixel space.
-	pos.x += (Frame.Width * 0.5) - (width * 0.5);
-	pos.y += (Frame.Height * 0.5) - (height * 0.5);
 
-	for (int y = 0; y < Frame.Height; y++)
 	{
-		for (int x = 0; x < Frame.Width; x++)
 		{
-			if ((x >= pos.x && y >= pos.y) && (x <= (pos.x + width) && y <= (pos.y + height)))
-			{
-				Frame.Pixels[(Frame.Width * y) + x] = hexColor;
-			}
 		}
 	}
 }
@@ -135,13 +120,13 @@ LRESULT CALLBACK WindowProc(HWND window_handle, UINT message, WPARAM wParam, LPA
 			int quality = Frame.Width / segments;
 
 			// HACK.
-			DrawRect(Vector2{ 0,0 }, Frame.Width, Frame.Height, 0x000000);
+			DrawRect(0, 0, Frame.Width, Frame.Height, 0x000000);
 			for (int x = 0; x < segments; x++)
 			{
-				int rnd = x + rand() % insanity;
+				int rnd = rand() % insanity;
 
 				// ( Position ) - ( ( Half Segments ) * Width ) + ( Width / 2 ) 
-				DrawRect(Vector2{ ((x * quality) - ((segments / 2) * quality) + (quality / 2)), 0 }, quality, Frame.Height / 8 + rnd, 0xFFFF00);
+				DrawRect(((x * quality) - ((segments / 2) * quality) + (quality / 2)), 0, quality, Frame.Height / 2 + rnd, 0xFFFF00);
 			}
 
 			BitBlt(device_context_handle,   // Destination.
