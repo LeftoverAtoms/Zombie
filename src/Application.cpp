@@ -124,41 +124,22 @@ LRESULT CALLBACK WindowProc(HWND window_handle, UINT message, WPARAM wParam, LPA
 			PAINTSTRUCT paint;
 			HDC device_context_handle = BeginPaint(window_handle, &paint);
 
-			RECT bg_rect = paint.rcPaint;
-			int width = bg_rect.right - bg_rect.left;
-			int height = bg_rect.bottom - bg_rect.top;
 			RECT rect = paint.rcPaint;
 			int width = rect.right - rect.left;
 			int height = rect.bottom - rect.top;
 
-			// Background.
-			FillRect(device_context_handle, &bg_rect, CreateSolidBrush(RGB(64, 64, 64)));
 			int halfWidth = Frame.Width / 2;
 
-			HBRUSH line_brush = CreateSolidBrush(RGB(255, 0, 0));
 			int segments = 512;
 			int insanity = 8;
 			int quality = Frame.Width / segments;
 
-			int quality = width / 512;
-			int insanity = 16;
-
-			for (int x = 0; x < Frame.Width; x += quality)
 			// HACK.
 			DrawRect(Vector2{ 0,0 }, Frame.Width, Frame.Height, 0x000000);
 			for (int x = 0; x < segments; x++)
 			{
-				int rnd = x * 0.1 + rand() % insanity;
-
-				RECT line_rect;
-				line_rect.left = x;
-				line_rect.right = x + quality;
-				line_rect.top = height * 0.5 + rnd;
-				line_rect.bottom = height * 0.5 - rnd;
 				int rnd = x + rand() % insanity;
 
-				// Vertical lines.
-				FillRect(device_context_handle, &line_rect, line_brush);
 				// ( Position ) - ( ( Half Segments ) * Width ) + ( Width / 2 ) 
 				DrawRect(Vector2{ ((x * quality) - ((segments / 2) * quality) + (quality / 2)), 0 }, quality, Frame.Height / 8 + rnd, 0xFFFF00);
 			}
