@@ -4,9 +4,9 @@
 #define UNICODE
 #endif 
 
-#include "Game.h"
-#include "Log.cpp"
 #include <windows.h>
+
+#include "Log.h"
 
 const wchar_t WindowName[] = L"Zombie Game";
 const wchar_t WindowClassName[] = L"ZMB_GAME";
@@ -23,8 +23,8 @@ struct
 void DrawRect(int x, int y, int width, int height, int hexColor)
 {
 	// Convert coordinate space to pixel space.
-	x += (Frame.Width * 0.5) - (width * 0.5);
-	y += (Frame.Height * 0.5) - (height * 0.5);
+	x += (Frame.Width * 0.5f) - (width * 0.5f);
+	y += (Frame.Height * 0.5f) - (height * 0.5f);
 
 	for (int yi = y; yi < y + height; yi++)
 	{
@@ -49,7 +49,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	// Redirect output stream.
 	freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);
-	freopen_s((FILE**)stderr, "CONOUT$", "w", stderr);
 
 	Log::Info("Console Initialized");
 #endif
@@ -95,9 +94,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			DispatchMessage(&message);
 		}
 
-		Game::Update();
-		Game::Render();
-
 		InvalidateRect(window_handle, NULL, FALSE);
 		UpdateWindow(window_handle);
 
@@ -115,6 +111,8 @@ LRESULT CALLBACK WindowProc(HWND window_handle, UINT message, WPARAM wParam, LPA
 		case WM_DESTROY:
 		case WM_QUIT:
 		{
+			Log::Info("Shutting down");
+
 			quit = true;
 
 			break;
@@ -130,7 +128,7 @@ LRESULT CALLBACK WindowProc(HWND window_handle, UINT message, WPARAM wParam, LPA
 			int height = rect.bottom - rect.top;
 
 			float segments = Frame.Width;
-			int insanity = 10;
+			int insanity = 100;
 			int quality = Frame.Width / segments;
 
 			float halfSegments = segments / 2;

@@ -155,6 +155,7 @@
     <ClCompile Include="src\Log.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Log.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
