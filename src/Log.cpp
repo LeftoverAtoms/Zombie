@@ -2,9 +2,7 @@
 
 #include "Log.h"
 
-const char* FilePath = ".\\logs\\";
-const char* FileName = "output.log";
-char* ActualPath;
+const char* FilePath = ".\\logs\\output.log";
 
 std::ofstream Log::Output;
 
